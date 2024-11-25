@@ -26,7 +26,7 @@ class Project(Base):
     name = Column(String, unique=True, index=True)
     title = Column(String)
     description = Column(String)
-    isPublic = Column(Boolean, default=False)
+    is_public = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
     updated_at = Column(DateTime, default=datetime.now(timezone.utc))
 
@@ -36,7 +36,7 @@ class Document(Base):
     name = Column(String, unique=True, index=True)
     title = Column(String)
     description = Column(String)
-    isPublic = Column(Boolean, default=False)
+    is_public = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
     updated_at = Column(DateTime, default=datetime.now(timezone.utc))
     project_id = Column(Integer, ForeignKey("projects.id"))

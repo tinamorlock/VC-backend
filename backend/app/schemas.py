@@ -1,7 +1,5 @@
 from pydantic import BaseModel, EmailStr
 
-# schema for user registration
-
 class UserCreate(BaseModel):
     email: EmailStr
     username: str
@@ -10,7 +8,7 @@ class UserCreate(BaseModel):
     phone: str
     password: str
 
-class UserResponse(BaseModel):
+class User(BaseModel):
     id: int
     email: EmailStr
 
@@ -21,4 +19,14 @@ class ProjectCreate(BaseModel):
     name: str
     title: str
     description: str
-    isPublic: bool
+    is_public: bool
+
+class Project(ProjectCreate):
+    id: int
+    user_id: int
+
+    class Config:
+        orm_mode = True
+
+class TokenData(BaseModel):
+    sub: int

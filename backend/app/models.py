@@ -77,9 +77,10 @@ class Comments(Base):
     content = Column(String)
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
     updated_at = Column(DateTime, default=datetime.now(timezone.utc))
-    parent_id = Column(Integer, ForeignKey("comments.id"))
+    parent_id = Column(Integer, ForeignKey("comments.id"), nullable=True)  # Allow null for root comments
 
-    parent = relationship("Comments", remote_side="id", backref="replies")
+    # Self-referential relationship to handle parent-child (nested) comments
+    parent = relationship("Comments", remote_side="id", backref="replies", lazy="dynamic")
 
     def __repr__(self):
         return f"<Comment(id={self.id}, content={self.content[:20]})>"

@@ -1,5 +1,5 @@
-from typing import Optional
-
+from typing import Optional, List
+from datetime import datetime
 from pydantic import BaseModel, EmailStr
 
 class UserCreate(BaseModel):
@@ -87,3 +87,30 @@ class FileResponse(FileBase):
 
     class Config:
         orm_mode = True
+
+class CommentBase(BaseModel):
+    content: str
+    file_id: int
+    parent_id: Optional[int] = None  # Optional for nested replies
+
+class CommentCreate(CommentBase):
+    pass
+
+class Comment(CommentBase):
+    id: int
+    user_id: int
+    created_at: datetime
+    updated_at: datetime
+    replies: List["Comment"]
+
+    # Initialize replies in the constructor
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        if self.replies is None:
+            self.replies = []  # Initialize replies as an empty list if None
+
+    class Config:
+        orm_mode = True  # Tells Pydantic to treat data as if it's an SQLAlchemy model instance
+
+# Update forward references for the nested "Comment" class (needed for circular references)
+Comment.model_rebuild()

@@ -44,5 +44,11 @@ def unfollow(user_id: int, following_id: int, db: Session = Depends(get_db)):
 
     return {"detail": f"User {user_id} unfollowed user {following_id}"}
 
-@app.get("/friends", response_model=List[schemas.Follow])
-def get_friends(db: Session = Depends(get_db)): ##### START HERE!!
+@app.get("/users/{user_id}/friends", response_model=List[int])
+def get_friends(user_id: int, db: Session = Depends(get_db)):
+    friends = (db.query(models.Follows.follower)
+               .join(models.Follows, models.Follows.follower == models.Follows.following)
+               .filter(models.Follows.following == user_id, models.Follows.follower != user_id).all())
+    if not friends:
+        raise HTTPException(status_code=404, detail="This user doesn't have any friends yet.")
+    return [friend[0] for friend in friends]

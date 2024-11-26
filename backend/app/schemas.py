@@ -56,3 +56,15 @@ class DocumentUpdate(BaseModel):
 
     class Config:
         orm_mode = True
+
+class FollowCreate(BaseModel):
+    following_id: int
+
+class Follow(BaseModel):
+    id: int
+    follower_id: int
+    following_id: int
+    created_at: str
+
+    class Config:
+        orm_mode = True

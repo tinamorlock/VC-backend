@@ -61,13 +61,13 @@ class Document(Base):
 class File(Base):
     __tablename__ = "files"
     id = Column(Integer, primary_key=True, index=True)
-    filename = Column(String, unique=True, index=True)
+    filename = Column(String, unique=True, index=True, nullable=False)
     file_path = Column(String, nullable=False)
-    file_size = Column(Integer)
-    file_type = Column(String)
+    file_size = Column(Integer, nullable=False)
+    file_type = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
     updated_at = Column(DateTime, default=datetime.now(timezone.utc))
-    document_id = Column(Integer, ForeignKey("documents.id"))
+    document_id = Column(Integer, ForeignKey("documents.id"), nullable=False)
 
 class Comments(Base):
     __tablename__ = "comments"

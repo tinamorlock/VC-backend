@@ -68,3 +68,22 @@ class Follow(BaseModel):
 
     class Config:
         orm_mode = True
+
+class FileBase(BaseModel):
+    filename: str
+    file_path: str
+    file_size: int
+    file_type: str
+
+class FileCreate(BaseModel):
+    filename: str
+    file_size: int
+    file_type: str
+    document_id: int  # Associated document
+
+class FileResponse(FileBase):
+    id: int
+    document_id: int
+
+    class Config:
+        orm_mode = True

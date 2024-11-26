@@ -1,6 +1,5 @@
 from sqlalchemy.orm import Session
-from .. import models, schemas
-from .. models import Document
+from backend.app import models, schemas
 
 def create_doc(db: Session, doc: schemas.DocumentCreate, user_id: int):
     db_doc = models.Document(**doc.model_dump(), user_id=user_id)
@@ -13,7 +12,7 @@ def list_all_docs(db: Session, user_id: int):
     return db.query(models.Document).filter(models.Document.user_id == user_id).all()
 
 def list_doc_by_id(db: Session, doc_id: int, user_id: int):
-    return db.query(models.Document).filter(Document.id == doc_id, Document.user_id == user_id).first()
+    return db.query(models.Document).filter(models.Document.id == doc_id, models.Document.user_id == user_id).first()
 
 def update_doc(db: Session, doc_id: int, doc_data: schemas.ProjectUpdate, user_id: int):
     db_doc = db.query(models.Document).filter_by(id=doc_id, user_id=user_id).first()

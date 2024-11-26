@@ -49,6 +49,7 @@ class Project(Base):
 class Document(Base):
     __tablename__ = "documents"
     id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
     name = Column(String, unique=True, index=True)
     title = Column(String)
     description = Column(String)

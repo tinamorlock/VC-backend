@@ -41,3 +41,18 @@ class Project(ProjectCreate):
 
 class TokenData(BaseModel):
     sub: int
+
+class DocumentCreate(BaseModel):
+    name: str
+    title: str
+    description: str
+    is_public: bool
+
+class DocumentUpdate(BaseModel):
+    name: Optional[str] = None
+    title: Optional[str] = None
+    description: Optional[str] = None
+    is_public: Optional[bool] = None
+
+    class Config:
+        orm_mode = True

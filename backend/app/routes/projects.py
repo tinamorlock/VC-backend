@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+
 from ..auth import get_current_user
-from ..crud.projects import list_all_projects, list_project_by_id, create_project
+from ..crud.projects import list_all_projects, list_project_by_id, create_project, update_project, delete_project
 from ..database import get_db
 from ...app import models, schemas
-from ...app.crud import projects
 from ..models import User
 
 router = APIRouter()
@@ -27,3 +27,17 @@ def get_project(project_id: int, db: Session = Depends(get_db), current_user: Us
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
     return project
+
+@router.put("/projects/{project_id}", response_model=schemas.Project)
+def update_project(project_id: int, project_data: schemas.ProjectUpdate, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    try:
+        return update_project(db, project_id, project_data, user.id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+@router.delete("/projects/{project_id}", response_model=dict)
+def delete_project(project_id: int, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    try:
+        return delete_project(db, project_id, user.id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))

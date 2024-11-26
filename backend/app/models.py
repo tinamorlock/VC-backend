@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean, UniqueConstraint
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -18,6 +18,22 @@ class User(Base):
     salt = Column(String)
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
     updated_at = Column(DateTime, default=datetime.now(timezone.utc))
+
+class Follows(Base):
+    __tablename__ = "follows"
+    id = Column(Integer, primary_key=True, index=True)
+    follower_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    following_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    created_at = Column(DateTime, default=datetime.now(timezone.utc))
+
+    # Enforce uniqueness: one user can't follow another more than once
+    __table_args__ = (
+        UniqueConstraint("follower_id", "following_id", name="unique_follow"),
+    )
+
+    # Relationships
+    follower = relationship("User", foreign_keys="follower_id", backref="following")
+    following = relationship("User", foreign_keys="following_id", backref="followers")
 
 class Project(Base):
     __tablename__ = "projects"

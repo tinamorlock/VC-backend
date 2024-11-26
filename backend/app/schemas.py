@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel, EmailStr
 
 class UserCreate(BaseModel):
@@ -20,6 +22,15 @@ class ProjectCreate(BaseModel):
     title: str
     description: str
     is_public: bool
+
+class ProjectUpdate(BaseModel):
+    name: Optional[str] = None
+    title: Optional[str] = None
+    description: Optional[str] = None
+    is_public: Optional[bool] = None
+
+    class Config:
+        orm_mode = True
 
 class Project(ProjectCreate):
     id: int
